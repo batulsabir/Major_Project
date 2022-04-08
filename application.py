@@ -2,11 +2,9 @@ import streamlit as st
 import numpy as np
 import tensorflow
 from tensorflow import keras
-import numpy as np
 import cv2
 from pydub import AudioSegment
 from pydub.playback import play
-import dlib
 
 def load_model(path):
     model = keras.models.load_model(path)
@@ -36,19 +34,20 @@ def realTime(model):
             eye= eye.reshape(80,80,3)
             eye= np.expand_dims(eye,axis=0)
             prediction = model.predict(eye)
-            if prediction[0][0]>0.40:
+            if prediction[0][0]>0.25:
                 Score=Score+1
                 if(Score>7):
                     try:
-                        cv2.putText(frame,'drowsy',(10,height-100),fontFace=cv2.FONT_HERSHEY_COMPLEX_SMALL,fontScale=1,color=(255,255,255),
+                        cv2.putText(frame,'drowsy',(10,height-100),fontFace=cv2.FONT_HERSHEY_COMPLEX_SMALL,fontScale=1,color=(255,0,0),
                        thickness=1,lineType=cv2.LINE_AA)
                         song = AudioSegment.from_wav('./res/alarm.wav')
                         play(song)
+                        Score=1
                         continue
                     except:
                         pass
 
-            elif prediction[0][1]>0.90:
+            elif prediction[0][1]>0.80:
                 Score = Score-1
                 if (Score<0):
                     Score=0
