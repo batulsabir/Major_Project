@@ -23,12 +23,12 @@ def realTime(model):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         # img = cv2.resize(img, (80,80))
         faces= face_cascade.detectMultiScale(gray, scaleFactor= 1.2, minNeighbors=5)
-        eyes= eye_cascade.detectMultiScale(gray, scaleFactor= 1.1, minNeighbors=1)
+        eyes= eye_cascade.detectMultiScale(gray, scaleFactor= 1.1, minNeighbors=2)
         for (x,y,w,h) in faces:
             cv2.rectangle(frame,pt1=(x,y),pt2=(x+w,y+h), color= (255,0,0), thickness=3 )
         
         for (ex,ey,ew,eh) in eyes:
-            eye= frame[ey:ey+eh,ex:ex+w]
+            eye= frame[ey:ey+eh,ex:ex+ew]
             eye= cv2.resize(eye,(80,80))
             eye= eye/255
             eye= eye.reshape(80,80,3)
@@ -38,7 +38,7 @@ def realTime(model):
                 Score=Score+1
                 if(Score>7):
                     try:
-                        cv2.putText(frame,'drowsy',(10,height-100),fontFace=cv2.FONT_HERSHEY_COMPLEX_SMALL,fontScale=1,color=(255,0,0),
+                        cv2.putText(frame,'YOU SEEM DROWSY!',(10,height-100),fontFace=cv2.FONT_HERSHEY_COMPLEX_SMALL,fontScale=1,color=(0,0,255),
                        thickness=1,lineType=cv2.LINE_AA)
                         song = AudioSegment.from_wav('./res/alarm.wav')
                         play(song)
